@@ -71,7 +71,10 @@ module Clarinet
       config.delete :video
 
       inputs = [inputs] unless inputs.is_a? Array
-      inputs = inputs.map { |input| Clarinet::Utils.format_media_predict(input) }
+      inputs = inputs.map do |input|
+        type = (video ? :video : :image)
+        Clarinet::Utils.format_media_predict(input, type)
+      end
 
       @app.client.outputs id, inputs, config
     end

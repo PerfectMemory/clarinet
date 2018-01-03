@@ -66,8 +66,10 @@ module Clarinet
     # @param inputs (see Clarinet::Model#predict)
     # @macro predict_inputs
     # @return [Hash] Data returned by the API with symbolized keys
-    def predict(model, inputs)
-      init_model(model).predict(inputs)
+    def predict(model, inputs, config={})
+      config[:video] ||= false
+
+      init_model(model).predict(inputs, config)
     end
 
     # Return all the models

@@ -96,10 +96,20 @@ describe Clarinet::Models do
   end
 
   describe '#predict' do
-    it 'should call #predict on Clarinet::Model instance' do
-      Clarinet::Model.any_instance.expects(:predict).with('fake_image_url')
+    context 'when analyzing an image' do
+      it 'should call #predict on Clarinet::Model instance' do
+        Clarinet::Model.any_instance.expects(:predict).with('fake_image_url', video: false)
 
-      @models.predict Clarinet::Model::GENERAL, 'fake_image_url'
+        @models.predict Clarinet::Model::GENERAL, 'fake_image_url'
+      end
+    end
+
+    context 'when analyzing a video' do
+      it 'should call #predict on Clarinet::Model instance' do
+        Clarinet::Model.any_instance.expects(:predict).with('fake_image_url', video: true)
+
+        @models.predict Clarinet::Model::GENERAL, 'fake_image_url', video: true
+      end
     end
   end
 
