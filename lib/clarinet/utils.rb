@@ -6,24 +6,48 @@ module Clarinet
   # @!visibility private
   class Utils
 
-    def self.check_response_status(status)
+    def self.check_response!(response)
+      status = response[:status]
       status_code = status[:code]
 
-      return if status_code == Clarinet::Status::SUCCESS
+      if status_code == Clarinet::Status::FAILURE
+        Array(response[:outputs]).each do |output|
+          check_status!(output[:status])
+        end
+      end
 
-      error_class = Clarinet::Error::ApiError
-      error_class = Clarinet::Error::InvalidAuthTokenError if status_code == Clarinet::Status::INVALID_AUTH_TOKEN
-      error_class = Clarinet::Error::ApiKeyNotFoundError if status_code == Clarinet::Status::API_KEY_NOT_FOUND
-      error_class = Clarinet::Error::BadRequestFormatError if status_code == Clarinet::Status::BAD_REQUEST_FORMAT
-      error_class = Clarinet::Error::InvalidRequestError if status_code == Clarinet::Status::INVALID_REQUEST
-      error_class = Clarinet::Error::ImageDecodingError if status_code == Clarinet::Status::IMAGE_DECODING_FAILED
-
-      new_error = error_class.new status[:description]
-      new_error.code = status_code
-      new_error.description = status[:description]
-      new_error.details = status[:details]
-      raise new_error
+      check_status!(status)
     end
+
+    def self.check_status!(status)
+      status_code = status[:code]
+
+      return true if status_code == Clarinet::Status::SUCCESS
+
+      error_class = case status_code
+                    when Clarinet::Status::INVALID_AUTH_TOKEN
+                      Clarinet::Error::InvalidAuthTokenError
+                    when Clarinet::Status::API_KEY_NOT_FOUND
+                      Clarinet::Error::ApiKeyNotFoundError
+                    when Clarinet::Status::BAD_REQUEST_FORMAT
+                      Clarinet::Error::BadRequestFormatError
+                    when Clarinet::Status::INVALID_REQUEST
+                      Clarinet::Error::InvalidRequestError
+                    when Clarinet::Status::IMAGE_DECODING_FAILED
+                      Clarinet::Error::ImageDecodingError
+                    else
+                      Clarinet::Error::ApiError
+                    end
+
+      error_class.new(status[:description]).tap do |e|
+        e.code = status_code
+        e.description = status[:description]
+        e.details = status[:details]
+
+        raise e
+      end
+    end
+
 
     def self.format_model(model_data)
       formatted = {

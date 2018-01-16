@@ -2,6 +2,8 @@ module Clarinet
   module Status
     SUCCESS = 10000
 
+    FAILURE = 10020
+
     INVALID_AUTH_TOKEN = 11001
     API_KEY_NOT_FOUND = 11009
 

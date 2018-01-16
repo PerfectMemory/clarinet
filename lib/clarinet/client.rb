@@ -153,7 +153,7 @@ module Clarinet
       def with_response_parsing(&block)
         response = yield
         data = JSON.parse response.parsed_response, symbolize_names: true
-        Clarinet::Utils.check_response_status data[:status]
+        Clarinet::Utils.check_response! data
         data
       end
 
