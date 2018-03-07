@@ -25,5 +25,9 @@ module Clarinet
     class ImageDecodingError < ApiError
 
     end
+
+    class DuplicateURLError < ApiError
+
+    end
   end
 end

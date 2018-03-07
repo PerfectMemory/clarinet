@@ -11,5 +11,7 @@ module Clarinet
     INVALID_REQUEST = 11102
 
     IMAGE_DECODING_FAILED = 30300
+
+    DUPLICATE_URL = 30100
   end
 end

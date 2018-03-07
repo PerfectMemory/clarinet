@@ -14,6 +14,10 @@ module Clarinet
         Array(response[:outputs]).each do |output|
           check_status!(output[:status])
         end
+
+        Array(response[:inputs]).each do |input|
+          check_status!(input[:status])
+        end
       end
 
       check_status!(status)
@@ -35,6 +39,8 @@ module Clarinet
                       Clarinet::Error::InvalidRequestError
                     when Clarinet::Status::IMAGE_DECODING_FAILED
                       Clarinet::Error::ImageDecodingError
+                    when Clarinet::Status::DUPLICATE_URL
+                      Clarinet::Error::DuplicateURLError
                     else
                       Clarinet::Error::ApiError
                     end
