@@ -90,9 +90,9 @@ module Clarinet
         data: {}
       }
 
-      formatted[:data][:concepts] = input_data.concepts if input_data.key? :concepts
-      formatted[:data][:metadata] = input_data.metadata if input_data.key? :metadata
-      formatted[:data][:geo] = { geo_point: input_data.geo } if input_data.key? :geo
+      formatted[:data][:concepts] = input_data[:concepts] if input_data.key? :concepts
+      formatted[:data][:metadata] = input_data[:metadata] if input_data.key? :metadata
+      formatted[:data][:geo] = { geo_point: input_data[:geo] } if input_data.key? :geo
 
       if input_data[:url]
         formatted[:data][:image] = {
