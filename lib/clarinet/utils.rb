@@ -82,7 +82,7 @@ module Clarinet
       concept_data
     end
 
-    def self.format_input(input_data, include_image = true)
+    def self.format_input(input_data)
       input_data = { url: input_data } if input_data.is_a? String
 
       formatted = {
@@ -94,13 +94,13 @@ module Clarinet
       formatted[:data][:metadata] = input_data.metadata if input_data.key? :metadata
       formatted[:data][:geo] = { geo_point: input_data.geo } if input_data.key? :geo
 
-      if include_image
+      if input_data[:url]
         formatted[:data][:image] = {
           url: input_data[:url],
           base64: input_data[:base64],
           crop: input_data[:crop],
           allow_duplicate_url: input_data.fetch(:allow_duplicate_url, false)
-        }
+        }.compact
       end
 
       formatted
