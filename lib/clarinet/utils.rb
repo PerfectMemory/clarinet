@@ -113,14 +113,15 @@ module Clarinet
     end
 
     def self.format_media_predict(input_data, type = :image)
-      if input_data.is_a? String
-        input_data = { base64: input_data } unless valid_url? input_data
-        input_data = { url: input_data } if valid_url? input_data
-      end
+      content_type = valid_url?(input_data) ? :url : :base64
 
-      data = {}
-      data[type] = input_data
-      { data: data }
+      {
+        data: {
+          type => {
+            content_type => input_data,
+          },
+        },
+      }
     end
 
     private_class_method def self.valid_url?(url)
